@@ -1,5 +1,8 @@
 package com.entidades;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,37 +13,35 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Entity
-public class Profesores {
+public class Alumno {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)//El generated Value para hacerlo autoincremental.
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	@NotBlank(message = "No puedes dejar los campos en blanco")
+	@NotBlank(message="No puedes dejar en blanco los campos")
 	@Size(min = 3, max = 20)
 	@Pattern(regexp = "^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$",/*Expresión regular para que solo puedan tener letras*/
     message = "El nombre solo puede contener letras")
 	private String nombre, apellido1, apellido2;
-	@NotBlank(message = "No puedes dejar los campos en blanco")
-	@Size(min = 6, max = 40, message="Longitud minima de 6")
-	private String pass;
 	@NotBlank(message = "El email no puede estar vacío")
 	@Email(message = "Debe introducir un email válido Ej: juanita23@gmail.com")
 	private String email;
 	
-	private boolean es_Directiva;//Valor negativo por defecto.
+	private LocalDate fecha_nacimiento;
+	//curso_matriculado.
 	
-	public Profesores (String nombre,String apellido1,String apellido2,String email,String pass, boolean es_Directiva) {
-		this.nombre=nombre;
+	public Alumno(String nombre,String apellido1,String apellido2,String email, LocalDate fecha_nacimiento) {
+		this.nombre= nombre;
 		this.apellido1=apellido1;
 		this.apellido2=apellido2;
 		this.email=email;
-		this.pass=pass;
-		this.es_Directiva=es_Directiva;
+		this.fecha_nacimiento=fecha_nacimiento;
 	}
-
-	public Profesores () {
+	
+	public Alumno() {
 		
 	}
+
 	public String getNombre() {
 		return nombre;
 	}
@@ -65,14 +66,6 @@ public class Profesores {
 		this.apellido2 = apellido2;
 	}
 
-	public String getPass() {
-		return pass;
-	}
-
-	public void setPass(String pass) {
-		this.pass = pass;
-	}
-
 	public String getEmail() {
 		return email;
 	}
@@ -80,6 +73,15 @@ public class Profesores {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
 
+	public LocalDate getFecha_nacimiento() {
+		return fecha_nacimiento;
+	}
+
+	public void setFecha_nacimiento(LocalDate fecha_nacimiento) {
+		this.fecha_nacimiento = fecha_nacimiento;
+	}
+	
+	
+	
 }
