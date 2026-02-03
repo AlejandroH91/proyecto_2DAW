@@ -1,18 +1,19 @@
 package com.entidades;
 
-import java.util.List;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Entity
-public class Curso{
+public class Empresa {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,17 +22,16 @@ public class Curso{
 	@Size(min = 5 , max = 20)
 	@Pattern(regexp = "^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$",
 			 message = "El nombre solo puede contener letras")
-	private String nombre;
-	@OneToMany(mappedBy = "curso")
-    private List<Alumno> alumnos;
+	private String nombre,descripcion;
 	
-	public  Curso(String nombre,List<Alumno> alumnos) {
-		this.nombre= nombre;
-		this.alumnos=alumnos;
-		
-	}
+	@ManyToOne
+	@JoinColumn(name = "tutor")
+	private Profesores tutor;
 	
-	public Curso() {
+	public Empresa(String nombre, String descripcion, Profesores tutor) {
+		this.nombre=nombre;
+		this.descripcion=descripcion;
+		this.tutor= tutor;	
 		
 	}
 
@@ -43,13 +43,20 @@ public class Curso{
 		this.nombre = nombre;
 	}
 
-	public List<Alumno> getAlumnos() {
-		return alumnos;
+	public String getDescripcion() {
+		return descripcion;
 	}
 
-	public void setAlumnos(List<Alumno> alumnos) {
-		this.alumnos = alumnos;
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
-	
+
+	public Profesores getTutor() {
+		return tutor;
+	}
+
+	public void setTutor(Profesores tutor) {
+		this.tutor = tutor;
+	}
 	
 }

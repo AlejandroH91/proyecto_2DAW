@@ -3,10 +3,13 @@ package com.entidades;
 import java.time.LocalDate;
 import java.util.Date;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -24,11 +27,14 @@ public class Alumno {
     message = "El nombre solo puede contener letras")
 	private String nombre, apellido1, apellido2;
 	@NotBlank(message = "El email no puede estar vacío")
+	@Column(unique = true)
 	@Email(message = "Debe introducir un email válido Ej: juanita23@gmail.com")
 	private String email;
 	
 	private LocalDate fecha_nacimiento;
-	//curso_matriculado.
+	@ManyToOne
+    @JoinColumn(name = "curso_id") 
+    private Curso curso;
 	
 	public Alumno(String nombre,String apellido1,String apellido2,String email, LocalDate fecha_nacimiento) {
 		this.nombre= nombre;

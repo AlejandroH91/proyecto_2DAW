@@ -1,13 +1,16 @@
 package com.entidades;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 public class Profesores {
@@ -24,10 +27,14 @@ public class Profesores {
 	@Size(min = 6, max = 40, message="Longitud minima de 6")
 	private String pass;
 	@NotBlank(message = "El email no puede estar vacío")
+	@Column(unique = true)//Para asegurar que no exista dos veces el mismo correo.
 	@Email(message = "Debe introducir un email válido Ej: juanita23@gmail.com")
 	private String email;
 	
 	private boolean es_Directiva;//Valor negativo por defecto.
+	
+	@OneToMany(mappedBy = "tutor")
+	private List<Empresa> empresas;
 	
 	public Profesores (String nombre,String apellido1,String apellido2,String email,String pass, boolean es_Directiva) {
 		this.nombre=nombre;
@@ -63,6 +70,12 @@ public class Profesores {
 
 	public void setApellido2(String apellido2) {
 		this.apellido2 = apellido2;
+	}
+	
+	public String tutor_nombreCompleto() {
+		String nombre_completo;
+		nombre_completo= this.nombre + " " + this.apellido1 + " "+ this.apellido2;
+		return nombre_completo;
 	}
 
 	public String getPass() {
