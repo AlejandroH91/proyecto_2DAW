@@ -58,5 +58,8 @@ public class Empresa {
 	public void setTutor(Profesores tutor) {
 		this.tutor = tutor;
 	}
+	public String getEmailTutor (Profesores profesor) {
+		return profesor.getEmail();
+	}
 	
 }
