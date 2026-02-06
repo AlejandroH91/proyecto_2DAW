@@ -28,13 +28,18 @@ public class EmpresaServicioImpl implements EmpresaServicio{
 	public void eliminarEmpresa(int id) {
 		repository.deleteById(id);;
 	}
+	
+	public Empresa mostrarEmpresaPorId(int id){
+		return repository.findById(id).orElse(null);
+	}
+	
 	 public void editarEmpresa(int id, Empresa empresa) {
 	        Empresa existe = repository.findById(id).orElse(null);
 	        if (existe != null) {
 	            existe.setNombre(empresa.getNombre());
 	            existe.setDescripcion(empresa.getDescripcion());
-	            existe.setTutor(empresa.getTutor());
-	            existe.setEmail(empresa.getEmailTutor());
+	            existe.setNombre_tutor(empresa.getNombre_tutor());
+	            existe.setEmail_tutor(empresa.getEmail_tutor());
 	            repository.save(existe);
 	        }
 	    }

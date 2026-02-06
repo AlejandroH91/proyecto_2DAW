@@ -1,5 +1,6 @@
 package com.entidades;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,17 +23,17 @@ public class Empresa {
 	@Size(min = 5 , max = 20)
 	@Pattern(regexp = "^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$",
 			 message = "El nombre solo puede contener letras")
-	private String nombre,descripcion;
+	private String nombre,descripcion, nombre_tutor;
+	@NotBlank(message = "El email no puede estar vacío")
+	@Column(unique = true)
+	@Email(message = "Debe introducir un email válido Ej: juanita23@gmail.com")
+	private String email_tutor;
 	
-	@ManyToOne
-	@JoinColumn(name = "tutor")
-	private Profesores tutor;
-	
-	public Empresa(String nombre, String descripcion, Profesores tutor) {
+	public Empresa(String nombre, String descripcion, String nombre_tutor, String email_tutor) {
 		this.nombre=nombre;
 		this.descripcion=descripcion;
-		this.tutor= tutor;	
-		
+		this.nombre_tutor= nombre_tutor;	
+		this.email_tutor= email_tutor;
 	}
 
 	public String getNombre() {
@@ -51,15 +52,23 @@ public class Empresa {
 		this.descripcion = descripcion;
 	}
 
-	public Profesores getTutor() {
-		return tutor;
+	public String getNombre_tutor() {
+		return nombre_tutor;
 	}
 
-	public void setTutor(Profesores tutor) {
-		this.tutor = tutor;
+	public void setNombre_tutor(String nombre_tutor) {
+		this.nombre_tutor = nombre_tutor;
 	}
-	public String getEmailTutor (Profesores profesor) {
-		return profesor.getEmail();
+
+	public String getEmail_tutor() {
+		return email_tutor;
 	}
+
+	public void setEmail_tutor(String email_tutor) {
+		this.email_tutor = email_tutor;
+	}
+
+	
+	
 	
 }
