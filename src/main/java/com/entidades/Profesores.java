@@ -34,7 +34,7 @@ public class Profesores {
 	private boolean es_Directiva;//Valor negativo por defecto.
 	
 	@OneToMany(mappedBy = "tutor")
-	private List<Empresa> empresas;
+	private List<Practica> pactica;
 	
 	public Profesores (String nombre,String apellido1,String apellido2,String email,String pass, boolean es_Directiva) {
 		this.nombre=nombre;
