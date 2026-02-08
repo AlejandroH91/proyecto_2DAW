@@ -19,11 +19,19 @@ public class Empresa {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	@NotBlank(message="No puedes dejar en blanco los campos")
+	
+	@NotBlank(message="No puedes dejar en blanco el campo")
 	@Size(min = 5 , max = 20)
-	@Pattern(regexp = "^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$",
-			 message = "El nombre solo puede contener letras")
-	private String nombre,descripcion, nombre_tutor;
+	@Pattern(regexp = "^[A-Za-zÁÉÍÓÚáéíóúÑñ0-9 .,&- ]+$", message = "El nombre solo puede contener letras")
+	private String nombre;
+	
+	@NotBlank(message="No puedes dejar en blanco el campo")
+	@Size(min = 3 , max = 20)
+	@Pattern(regexp = "^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$", message = "El nombre solo puede contener letras")
+	private String nombre_tutor;
+	
+	private String descripcion;
+	
 	@NotBlank(message = "El email no puede estar vacío")
 	@Column(unique = true)
 	@Email(message = "Debe introducir un email válido Ej: juanita23@gmail.com")
@@ -66,6 +74,14 @@ public class Empresa {
 
 	public void setEmail_tutor(String email_tutor) {
 		this.email_tutor = email_tutor;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	

@@ -1,4 +1,4 @@
-package com.servicio;
+package com.servicio.profesores;
 
 import java.util.ArrayList;
 import java.util.List;

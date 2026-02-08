@@ -1,4 +1,4 @@
-package com.servicio;
+package com.servicio.profesores;
 
 import java.util.List;
 import com.entidades.*;
