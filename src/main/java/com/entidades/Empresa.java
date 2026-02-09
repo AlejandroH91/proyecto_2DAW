@@ -44,6 +44,10 @@ public class Empresa {
 		this.email_tutor= email_tutor;
 	}
 
+	public Empresa() {
+		
+	}
+	
 	public String getNombre() {
 		return nombre;
 	}
