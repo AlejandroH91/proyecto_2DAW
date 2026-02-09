@@ -2,6 +2,8 @@ package com.entidades;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,6 +21,7 @@ public class Practica {
 	    private Long id;
 	 	
 	 	@NotNull
+	 	@DateTimeFormat(pattern ="yyyy-MM-dd")
 	    private LocalDate fechaInicio, fechaFin;
 
 	    @Column(length = 10000)

@@ -5,9 +5,9 @@
 </head>
 <body>
 
-<h1>Listado de Cursos</h1>
+<h1>Listado de Curso</h1>
 
-<div th:each="curso : ${cursos}">
+<div th:each="curso : ${listaCurso}">
     
     <h2 th:text="${curso.nombre}"></h2>
 
