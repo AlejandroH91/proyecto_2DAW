@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <title>Editar Profesor</title>
 </head>
-
 <body>
     <h1>Editar Profesor</h1>
 
-    <form th:action="@{'/profesores/actualizar/' + ${profesor.id}}" method="post">
+    <form th:action="@{/profesores/actualizar(email=${profesor.email})}" method="post">
         <label>Nombre:</label>
         <input type="text" name="nombre" th:value="${profesor.nombre}" required><br>
 
@@ -17,19 +15,14 @@
         <input type="text" name="apellido1" th:value="${profesor.apellido1}" required><br>
 
         <label>Apellido 2:</label>
-        <input type="text" name="apellido2" th:value="${profesor.apellido2}"><br>
+        <input type="text" name="apellido2" th:value="${profesor.apellido2}" required><br>
 
         <label>Email:</label>
-        <input type="email" name="email" th:value="${profesor.email}" required><br>
-
-        <label>Directiva:</label>
-        <input type="checkbox" name="es_Directiva" th:checked="${profesor.es_Directiva}"><br><br>
+        <input type="email" name="email" th:value="${profesor.email}" readonly><br>
 
         <button type="submit">Actualizar</button>
     </form>
 
-    <br>
-    <a th:href="@{/profesores}">Volver al listado de profesores</a>
+    <a th:href="@{/profesores}">Volver a la lista</a>
 </body>
-
 </html>

@@ -47,10 +47,19 @@ public class ProfesorControlador {
   
     @PostMapping("/actualizar")
     public String actualizarProfesor(@RequestParam String email, @ModelAttribute Profesores profesor) {
-        Profesores existente = profesoresServicio.findByEmail(email);
-        profesoresServicio.editarProfesor(existente.getId(), profesor);
+        // Buscar el profesor existente por email
+        Profesores existe = profesoresServicio.findByEmail(email);
+        existe.setNombre(profesor.getNombre());
+        existe.setApellido1(profesor.getApellido1());
+        existe.setApellido2(profesor.getApellido2());
+        existe.setEmail(profesor.getEmail());
+
+        // Guardar cambios
+        profesoresServicio.editarProfesor(existe.getId(), existe);
+
         return "redirect:/profesores";
     }
+
 
     @GetMapping("/eliminar")
     public String eliminarProfesor(@RequestParam String email) {

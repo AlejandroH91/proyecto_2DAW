@@ -15,10 +15,6 @@ public class ProfesoresServicioImpl implements ProfesoresServicio{
 	
 	@Autowired //Para instanciar la interfaz Repository
 	 private ProfesoresRepository repository;
-	
-	@Autowired
-	@Lazy
-	private PasswordEncoder passwordEncoder;
 
 	@Override
 	public List<Profesores> mostrarProfesores() {
@@ -33,12 +29,11 @@ public class ProfesoresServicioImpl implements ProfesoresServicio{
 	/*
 	 * Ahora con los datos creados y este método 
 	 * agregamos las clases a la lista.*/
-	@Override
-	public void agregarProfesor(Profesores profesor) {
-	    // Encriptar la contraseña antes de guardar
-	    profesor.setPass(passwordEncoder.encode(profesor.getPass()));
-	    repository.save(profesor);
-	}
+	   @Override
+	    public void agregarProfesor(Profesores profesor) {
+	        // SIN CIFRAR
+	        repository.save(profesor);
+	    }
 	
 	@Override
 	public void editarProfesor(int id, Profesores profesor) {

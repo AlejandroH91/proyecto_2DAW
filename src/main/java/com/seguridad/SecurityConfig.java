@@ -7,8 +7,11 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
+
 
 @Configuration
 public class SecurityConfig {
@@ -21,19 +24,22 @@ public class SecurityConfig {
     }
 
     // Password encoder para validar hashes BCrypt
+   
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return NoOpPasswordEncoder.getInstance();
     }
 
-    // DaoAuthenticationProvider que utiliza tu UserDetailsService
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
+        DaoAuthenticationProvider authProvider =
+                new DaoAuthenticationProvider(userDetailsService);
+
+        authProvider.setPasswordEncoder(passwordEncoder());
+
+        return authProvider;
     }
+
 
     // Configuración del AuthenticationManager para Spring Security 6
     @Bean
@@ -44,11 +50,10 @@ public class SecurityConfig {
         return authBuilder.build();
     }
 
-    // Configuración de seguridad web
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) 
+            .authenticationProvider(authenticationProvider()) // 👈 IMPORTANTE
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login", "/css/**", "/js/**").permitAll()
                 .requestMatchers("/profesores/**").hasAnyRole("PROFESOR", "ADMIN")
@@ -56,8 +61,6 @@ public class SecurityConfig {
             )
             .formLogin(form -> form
                 .loginPage("/login")
-                .usernameParameter("username") 
-                .passwordParameter("password") 
                 .defaultSuccessUrl("/profesores", true)
                 .permitAll()
             )
@@ -68,4 +71,5 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 }
