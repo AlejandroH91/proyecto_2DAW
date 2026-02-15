@@ -1,5 +1,7 @@
 package com.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import com.entidades.Profesores;
@@ -7,5 +9,5 @@ import com.entidades.Profesores;
 @Repository
 public interface ProfesoresRepository extends JpaRepository <Profesores, Integer>{
 	
-
+	Optional<Profesores> findByEmail(String email);
 }

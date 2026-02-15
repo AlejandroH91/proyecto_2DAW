@@ -10,4 +10,5 @@ public interface ProfesoresServicio {
 	public void agregarProfesor(Profesores profesor);
 	public void eliminarProfesor(int id);
 	public void editarProfesor(int id,Profesores profesor);
+	public Profesores findByEmail(String email);
 }

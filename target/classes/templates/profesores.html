@@ -1,33 +1,69 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <title>Profesores</title>
-    <meta charset="UTF-8">
+	<title>Profesores</title>
+	<meta charset="UTF-8">
 </head>
+
 <body>
 
-<h1>Lista de Profesores</h1>
+	<h1>Lista de Profesores</h1>
 
-<table border="1">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Apellido1</th>
-            <th>Apellido2</th>
-            <th>Email</th>
-            <th>Directiva</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr th:each="profesor : ${listarProfesores}">
-            <td th:text="${profesor.nombre}"></td>
-            <td th:text="${profesor.apellido1}"></td>
-            <td th:text="${profesor.apellido2}"></td>
-            <td th:text="${profesor.email}"></td>
-            <td th:text="${profesor.es_Directiva} ? 'Sí' : 'No'"></td>
-        </tr>
-    </tbody>
-</table>
+	<table id="tablaProfesores" border="1">
+
+		<thead>
+			<tr>
+				<th>Nombre</th>
+				<th>Apellido1</th>
+				<th>Apellido2</th>
+				<th>Email</th>
+				<th>Directiva</th>
+				<th>Editar/Borrar</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<tr th:each="profesor : ${listarProfesores}">
+				<td th:text="${profesor.nombre}"></td>
+				<td th:text="${profesor.apellido1}"></td>
+				<td th:text="${profesor.apellido2}"></td>
+				<td th:text="${profesor.email}"></td>
+				<td th:text="${profesor.es_Directiva} ? 'Sí' : 'No'"></td>
+
+				<td>
+					<a th:href="@{'/profesores/editar'(email=${profesor.email})}">Editar</a>
+					<a th:href="@{'/profesores/eliminar'(email=${profesor.email})}"
+					   onclick="return confirm('¿Seguro que quieres eliminar?');">Eliminar</a>
+ch
+				</td>
+			</tr>
+		</tbody>
+
+	</table>
+
+	<div th:if="${esAdmin}">
+		<h2>Añadir Profesor</h2>
+
+		<form th:action="@{/profesores/agregar}" method="post">
+			<label>Nombre:</label>
+			<input type="text" name="nombre" required><br>
+
+			<label>Apellido 1:</label>
+			<input type="text" name="apellido1" required><br>
+
+			<label>Apellido 2:</label>
+			<input type="text" name="apellido2"><br>
+
+			<label>Email:</label>
+			<input type="email" name="email" required><br>
+
+			<label>Directiva:</label>
+			<input type="checkbox" name="es_Directiva"><br>
+
+			<button type="submit">Guardar</button>
+		</form>
 
 </body>
+
 </html>

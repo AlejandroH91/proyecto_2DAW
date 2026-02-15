@@ -12,6 +12,8 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.util.List;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 @Entity
 public class Profesores {
 	
@@ -25,8 +27,8 @@ public class Profesores {
     message = "El nombre solo puede contener letras")
 	private String nombre, apellido1, apellido2;
 	
-	@NotBlank(message = "No puedes dejar los campos en blanco")
-	@Size(min = 6, max = 40, message="Longitud minima de 6")
+	@NotBlank(message = "No puedes dejar el campo en blanco")
+	@Size(min = 6, max = 400, message="Longitud minima de 6")
 	private String pass;
 	
 	@NotBlank(message = "El email no puede estar vacío")
@@ -47,6 +49,7 @@ public class Profesores {
 		this.pass=pass;
 		this.es_Directiva=es_Directiva;
 	}
+	
 
 	public Profesores () {
 		
@@ -86,7 +89,7 @@ public class Profesores {
 	}
 
 	public void setPass(String pass) {
-		this.pass = pass;
+	    this.pass= pass;
 	}
 
 	public String getEmail() {
@@ -120,8 +123,6 @@ public class Profesores {
 	public void setPactica(List<Practica> pactica) {
 		this.pactica = pactica;
 	}
-	
-	
-	
+
 
 }

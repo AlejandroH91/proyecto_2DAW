@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.entidades.Profesores;
 import com.repository.ProfesoresRepository;
@@ -13,6 +15,10 @@ public class ProfesoresServicioImpl implements ProfesoresServicio{
 	
 	@Autowired //Para instanciar la interfaz Repository
 	 private ProfesoresRepository repository;
+	
+	@Autowired
+	@Lazy
+	private PasswordEncoder passwordEncoder;
 
 	@Override
 	public List<Profesores> mostrarProfesores() {
@@ -29,8 +35,9 @@ public class ProfesoresServicioImpl implements ProfesoresServicio{
 	 * agregamos las clases a la lista.*/
 	@Override
 	public void agregarProfesor(Profesores profesor) {
-		repository.save(profesor);
-		
+	    // Encriptar la contraseña antes de guardar
+	    profesor.setPass(passwordEncoder.encode(profesor.getPass()));
+	    repository.save(profesor);
 	}
 	
 	@Override
@@ -50,5 +57,14 @@ public class ProfesoresServicioImpl implements ProfesoresServicio{
 	public void eliminarProfesor(int id) {
 		repository.deleteById(id);
 	}
+	
+	@Override
+	public Profesores findByEmail(String email) {
+
+	    return repository.findByEmail(email)
+	            .orElseThrow(() -> new RuntimeException("Profesor no encontrado"));
+	}
+	
+	
 
 }
