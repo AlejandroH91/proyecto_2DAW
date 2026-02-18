@@ -1,8 +1,11 @@
 package com.entidades;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,6 +40,7 @@ public class Alumno {
 	private String email;
 	
 	@NotNull
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate fecha_nacimiento;
 	
 	@ManyToOne
@@ -94,6 +98,10 @@ public class Alumno {
 		return fecha_nacimiento;
 	}
 
+	public String getFechaNacimientoFormateada() {
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+	    return fecha_nacimiento.format(formatter);
+	} 
 	public void setFecha_nacimiento(LocalDate fecha_nacimiento) {
 		this.fecha_nacimiento = fecha_nacimiento;
 	}
