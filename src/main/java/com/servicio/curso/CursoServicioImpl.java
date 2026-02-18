@@ -45,4 +45,10 @@ public class CursoServicioImpl implements CursoServicio {
     public void eliminarCurso(int id) {
     	repository.deleteById(id);
     }
+    
+    @Override
+    public Curso mostrarCursoPorId(int id) {
+        return repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+    }
 }

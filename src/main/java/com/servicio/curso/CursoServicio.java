@@ -8,9 +8,10 @@ import com.entidades.Curso;
 public interface CursoServicio {
 	
 	  List<Curso> mostrarCursos();
+	  Curso mostrarCursoPorId(int id);
 	  Curso mostrarCursosPorNombre(String nombre);
 	  void agregarCurso(Curso curso);
 	  void editarCurso(int id, Curso curso);
 	  void eliminarCurso(int id);
-	    
+	   
 }

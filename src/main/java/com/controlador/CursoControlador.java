@@ -51,17 +51,19 @@ public class CursoControlador {
         return "redirect:/Clases";
     }
 
-    // Actualizar un curso existente
     @PostMapping("/actualizar")
     public String actualizarCurso(@RequestParam int id, @ModelAttribute Curso cursos) {
     	curso.editarCurso(id, cursos);
         return "redirect:/Clases";
     }
 
-    // Eliminar un curso
-    @PostMapping("/eliminar")
+    
+    @PostMapping("/eliminarCurso")
     public String eliminarCurso(@RequestParam int id) {
-    	curso.eliminarCurso(id);
+        Curso eliminarCurso = curso.mostrarCursoPorId(id);
+        if (eliminarCurso.getAlumnos() == null || eliminarCurso.getAlumnos().isEmpty()) {
+            curso.eliminarCurso(id);
+        } 
         return "redirect:/Clases";
     }
 }
