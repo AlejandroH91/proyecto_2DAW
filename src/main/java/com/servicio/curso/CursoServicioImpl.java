@@ -12,35 +12,37 @@ import com.repository.CursoRepository;
 public class CursoServicioImpl implements CursoServicio {
 
     @Autowired
-    private CursoRepository cursoRepository;
+    private CursoRepository repository;
 
     @Override
     public List<Curso> mostrarCursos() {
-        return cursoRepository.findAll();
+        return repository.findAll();
     }
 
     @Override
     public Curso mostrarCursosPorNombre(String nombre) {
-        return cursoRepository.findByNombre(nombre);
+        return repository.findByNombre(nombre);
     }
 
     @Override
     public void agregarCurso(Curso curso) {
-        cursoRepository.save(curso);
+    	repository.save(curso);
     }
 
     @Override
     public void editarCurso(int id, Curso curso) {
-        Curso existente = cursoRepository.findById(id).orElse(null);
+        Curso existente = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
 
-        if (existente != null) {
-            existente.setNombre(curso.getNombre());
-            cursoRepository.save(existente);
-        }
+        existente.setNombre(curso.getNombre());
+        existente.setProfesor(curso.getProfesor());
+        existente.setAlumnos(curso.getAlumnos());
+
+        repository.save(existente);
     }
 
     @Override
     public void eliminarCurso(int id) {
-        cursoRepository.deleteById(id);
+    	repository.deleteById(id);
     }
 }

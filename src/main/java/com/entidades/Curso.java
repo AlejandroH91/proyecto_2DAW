@@ -5,9 +5,12 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -27,14 +30,20 @@ public class Curso{
 	@Column(unique= true, nullable = false)
 	private String nombre;
 	
+	@ManyToOne
+	 private Profesores profesor;
+	
+	 @Enumerated(EnumType.STRING)//Para que se guarde en String
+	  private NombreCurso nombreCurso;
 	
 	@OneToMany(mappedBy = "curso")
     private List<Alumno> alumnos =new ArrayList <>();
 	
-	public  Curso(String nombre,List<Alumno> alumnos) {
+	public  Curso(String nombre,List<Alumno> alumnos, Profesores profesor, NombreCurso nombreCurso) {
 		this.nombre= nombre;
 		this.alumnos=alumnos;
-		
+		this.profesor= profesor;
+		this.nombreCurso=nombreCurso;
 	}
 	
 	public Curso() {
@@ -63,6 +72,22 @@ public class Curso{
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Profesores getProfesor() {
+		return profesor;
+	}
+
+	public void setProfesor(Profesores profesor) {
+		this.profesor = profesor;
+	}
+
+	public NombreCurso getNombreCurso() {
+		return nombreCurso;
+	}
+
+	public void setNombreCurso(NombreCurso nombreCurso) {
+		this.nombreCurso = nombreCurso;
 	}
 	
 	

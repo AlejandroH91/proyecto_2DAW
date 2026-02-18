@@ -35,31 +35,23 @@ public class ProfesorControlador {
         profesoresServicio.agregarProfesor(profesor);
         return "redirect:/profesores";
     }
-
   
-    @GetMapping("/editar")
-    public String mostrarFormularioEditar(@RequestParam String email, Model model) {
-        Profesores profesor = profesoresServicio.findByEmail(email);
+    @GetMapping("/editar/{id}")
+    public String mostrarFormularioEditar(@PathVariable("id") int id, Model model) {
+        Profesores profesor = profesoresServicio.mostrarProfesorPorId(id);
         model.addAttribute("profesor", profesor);
-        return "editarProfesores"; 
+        return "editarProfesores";
     }
 
-  
-    @PostMapping("/actualizar")
-    public String actualizarProfesor(@RequestParam String email, @ModelAttribute Profesores profesor) {
-        // Buscar el profesor existente por email
-        Profesores existe = profesoresServicio.findByEmail(email);
-        existe.setNombre(profesor.getNombre());
-        existe.setApellido1(profesor.getApellido1());
-        existe.setApellido2(profesor.getApellido2());
-        existe.setEmail(profesor.getEmail());
-
-        // Guardar cambios
-        profesoresServicio.editarProfesor(existe.getId(), existe);
-
+    @PostMapping("/actualizar/{id}")
+    public String actualizarProfesor(
+            @PathVariable("id") int id,
+            @ModelAttribute Profesores profesor) {
+        
+        profesor.setId(id);          
+        profesoresServicio.editarProfesor(id, profesor);
         return "redirect:/profesores";
     }
-
 
     @GetMapping("/eliminar")
     public String eliminarProfesor(@RequestParam String email) {

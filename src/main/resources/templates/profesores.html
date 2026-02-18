@@ -1,63 +1,171 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profesores</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+          rel="stylesheet" 
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
-<body>
-    <h1>Lista de Profesores</h1>
+<body class="bg-light">
 
-    <!-- Formulario de crear solo para admins -->
-    <div sec:authorize="hasRole('ADMIN')">
-        <h2>Agregar Profesor</h2>
-        <form th:action="@{/profesores/agregar}" method="post">
-            <label>Nombre:</label>
-            <input type="text" name="nombre" required><br>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm fixed-top mb-5">
+	        <div class="container-fluid">
+	            <a class="navbar-brand fw-bold" href="#">Gestión DAW</a>
+	            
+	            <!-- Botón toggle para móvil -->
+	            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+	                    data-bs-target="#navbarNav" aria-controls="navbarNav" 
+	                    aria-expanded="false" aria-label="Toggle navigation">
+	                <span class="navbar-toggler-icon"></span>
+	            </button>
+	            
+	            <!-- Enlaces del menú -->
+	            <div class="collapse navbar-collapse" id="navbarNav">
+	                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+	                    <li class="nav-item">
+	                        <a class="nav-link active" aria-current="page" 
+	                           th:href="@{/profesores}">
+	                            Profesores
+	                        </a>
+	                    </li>
+	                    <li class="nav-item">
+	                        <a class="nav-link" th:href="@{/practicas}">
+	                            Prácticas
+	                        </a>
+	                    </li>
+	                    <li class="nav-item">
+	                        <a class="nav-link" th:href="@{/Clases}">
+	                            Cursos
+	                        </a>
+	                    </li>
+	                    <li class="nav-item">
+	                        <a class="nav-link" th:href="@{/empresas}">
+	                            Empresas
+	                        </a>
+	                    </li>
+	                </ul>
+	                <ul class="navbar-nav ms-auto">
+	                    <li class="nav-item">
+	                        <a class="nav-link text-white" th:href="@{/logout}">
+	                            <i class="bi bi-box-arrow-right me-1"></i> Cerrar sesión
+	                        </a>
+	                    </li>
+	                </ul>
+	            </div>
+	        </div>
+	    </nav>
+		
+    <div class="container my-5 mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-9">
 
-            <label>Apellido1:</label>
-            <input type="text" name="apellido1" required><br>
+                <h1 class="text-center mb-4 fw-bold text-primary mt-5">Lista de Profesores</h1>
 
-            <label>Apellido2:</label>
-            <input type="text" name="apellido2" required><br>
+                <!-- Solo aparece si es administrador -->
+                <div sec:authorize="hasRole('ADMIN')" class="card shadow mb-5">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Agregar Nuevo Profesor</h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/profesores/agregar}" method="post" class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Nombre</label>
+                                <input type="text" name="nombre" class="form-control" required>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Primer Apellido</label>
+                                <input type="text" name="apellido1" class="form-control" required>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Segundo Apellido</label>
+                                <input type="text" name="apellido2" class="form-control" required>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control" required>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Contraseña</label>
+                                <input type="password" name="pass" class="form-control" required>
+                            </div>
+                            
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="es_Directiva" id="esDirectiva">
+                                    <label class="form-check-label" for="esDirectiva">
+                                        Es personal directivo (rol ADMIN)
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 text-end">
+                                <button type="submit" class="btn btn-primary btn-lg px-5">
+                                    Crear Profesor
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
 
-            <label>Email:</label>
-            <input type="email" name="email" required><br>
+                <!-- Tabla de profesores -->
+                <div class="card shadow">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0">Listado de Profesores</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped align-middle mb-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Nombre completo</th>
+                                        <th>Email</th>
+                                        <th>Rol</th>
+                                        <th sec:authorize="hasRole('ADMIN')" class="text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="profesor : ${listarProfesores}">
+                                        <td th:text="${profesor.nombre} + ' ' + ${profesor.apellido1} + ' ' + ${profesor.apellido2}"></td>
+                                        <td th:text="${profesor.email}"></td>
+                                        <td>
+                                            <span th:classappend="${profesor.es_Directiva} ? 'badge bg-danger' : 'badge bg-success'"
+                                                  th:text="${profesor.es_Directiva} ? 'Directivo' : 'Profesor'"></span>
+                                        </td>
+                                        <td sec:authorize="hasRole('ADMIN')" class="text-center">
+											<a th:href="@{/profesores/editar/{id}(id=${profesor.id})}"
+											   class="btn btn-sm btn-warning">
+											    <i class="bi bi-pencil"></i> Editar
+											</a>
+                                            <a th:href="@{/profesores/eliminar(email=${profesor.email})}"
+                                               onclick="return confirm('¿Realmente deseas eliminar este profesor?');"
+                                               class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i> Eliminar
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
-            <label>Contraseña:</label>
-            <input type="text" name="pass" required><br>
-
-            <label>Es directiva:</label>
-            <input type="checkbox" name="es_Directiva"><br>
-
-            <button type="submit">Crear</button>
-        </form>
-        <hr>
+            </div>
+        </div>
     </div>
-
-    <!-- Lista de profesores -->
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Nombre completo</th>
-                <th>Email</th>
-                <th>Rol</th>
-                <th sec:authorize="hasRole('ADMIN')">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="profesor : ${listarProfesores}">
-                <td th:text="${profesor.nombre} + ' ' + ${profesor.apellido1} + ' ' + ${profesor.apellido2}"></td>
-                <td th:text="${profesor.email}"></td>
-                <td th:text="${profesor.es_Directiva} ? 'Admin' : 'Profesor'"></td><!--Si es true devuelve directiva, si no Profesor-->
-                <td sec:authorize="hasRole('ADMIN')">
-                    <a th:href="@{/profesores/editar(email=${profesor.email})}">Editar</a>
-                    |
-                    <a th:href="@{/profesores/eliminar(email=${profesor.email})}" 
-                       onclick="return confirm('¿Seguro que quieres eliminarlo?');">Eliminar</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
+            crossorigin="anonymous"></script>
 </body>
 </html>

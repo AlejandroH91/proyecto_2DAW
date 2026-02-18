@@ -31,7 +31,7 @@ public class LoginControlador {
 			return "login";
 		}else {
 			model.addAttribute("usuario", profesor);
-			return "redirect: /profesores";
+			return "redirect: profesores";
 		}
 		
 	}

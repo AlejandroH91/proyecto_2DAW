@@ -53,7 +53,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .authenticationProvider(authenticationProvider()) // 👈 IMPORTANTE
+            .authenticationProvider(authenticationProvider()) 
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login", "/css/**", "/js/**").permitAll()
                 .requestMatchers("/profesores/**").hasAnyRole("PROFESOR", "ADMIN")

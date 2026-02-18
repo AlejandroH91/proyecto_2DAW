@@ -31,7 +31,6 @@ public class ProfesoresServicioImpl implements ProfesoresServicio{
 	 * agregamos las clases a la lista.*/
 	   @Override
 	    public void agregarProfesor(Profesores profesor) {
-	        // SIN CIFRAR
 	        repository.save(profesor);
 	    }
 	
