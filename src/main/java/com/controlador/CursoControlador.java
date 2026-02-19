@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.entidades.Alumno;
 import com.entidades.Curso;
+import com.servicio.alumno.AlumnoServicio;
 import com.servicio.curso.CursoServicio;
 
 @Controller
@@ -19,7 +21,13 @@ public class CursoControlador {
 	@Autowired
 	private CursoServicio curso;
 	
-	String nombre;
+	@Autowired
+	private AlumnoServicio alumno;
+	
+	
+	/*
+	 * Este primer bloque para las acciones de curso
+	 * listar, */
 	@GetMapping
 	public String listarCurso(Model model) {
 		
@@ -66,4 +74,44 @@ public class CursoControlador {
         } 
         return "redirect:/Clases";
     }
+    
+    /*
+     * Segundo bloque para el CRUD de los alumnos.*/
+    
+    @PostMapping("/alumno/guardar")
+    public String guardarAlumno(@ModelAttribute Alumno alumno1) {
+        alumno.agregarAlumno(alumno1);
+        return "redirect:/Clases" ;
+    }
+
+    @PostMapping("/alumno/actualizar")
+    public String actualizarAlumno(@RequestParam int id, @ModelAttribute Alumno alumno1) {
+        alumno.editarAlumno(id, alumno1);
+        return "redirect:/Clases/ver?nombre=" + alumno1.getCurso().getNombre();
+    }
+
+    @GetMapping("/alumno/eliminar")
+    public String eliminarAlumno(@RequestParam int id) {
+        Alumno alumno1 = alumno.mostrarAlumnoPorId(id);
+        String cursoNombre = alumno1.getCurso().getNombre();
+        alumno.eliminarAlumno(id);
+        return "redirect:/Clases/ver?nombre=" + cursoNombre;
+    }
+
+    @GetMapping("/alumno/nuevo")
+    public String nuevoAlumno(@RequestParam int cursoId, Model model) {
+        Curso curso1 = curso.mostrarCursoPorId(cursoId);
+        Alumno alumno1 = new Alumno();
+        alumno1.setCurso(curso1);
+        model.addAttribute("alumno", alumno1);
+        return "alumnoForm";
+    }
+
+    @GetMapping("/alumno/editar")
+    public String editarAlumno(@RequestParam int id, Model model) {
+        Alumno alumno1 = alumno.mostrarAlumnoPorId(id);
+        model.addAttribute("alumno", alumno1);
+        return "alumnoForm";
+    }
+
 }

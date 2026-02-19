@@ -16,6 +16,8 @@
 </head>
 <body class="bg-light">
 
+	<!-- BARRA DE NAVEGACIÓN-->
+	
 	<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm fixed-top mb-5">
 	        <div class="container-fluid">
 	            <a class="navbar-brand fw-bold" href="#">Gestión DAW</a>
@@ -69,7 +71,9 @@
 
                 <h1 class="text-center mb-4 fw-bold text-primary mt-5">Lista de Profesores</h1>
 
-                <!-- Solo aparece si es administrador -->
+                <!-- FORMULARIO PARA AGREGAR PROFESORES -->
+				
+				
                 <div sec:authorize="hasRole('ADMIN')" class="card shadow mb-5">
                     <div class="card-header bg-primary text-white">
                         <h5 class="mb-0">Agregar Nuevo Profesor</h5>
@@ -118,8 +122,10 @@
                         </form>
                     </div>
                 </div>
+				
+				
 
-                <!-- Tabla de profesores -->
+                <!-- TABLA DE LISTADO DE PROFESORES -->
                 <div class="card shadow">
                     <div class="card-header bg-secondary text-white">
                         <h5 class="mb-0">Listado de Profesores</h5>
