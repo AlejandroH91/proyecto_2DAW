@@ -23,8 +23,11 @@
                               th:object="${alumno}"
                               method="post"
                               class="row g-4 needs-validation" novalidate>
-
-                            <input type="hidden" th:field="*{id}" />
+								
+							  <!--Uso el hidden para no mostrarlos pero son necesarios para que spring 
+								reconozca el curso sin duplicados y me borre alumnos-->
+							  <input type="hidden" th:field="*{curso.id}" />
+							  <input type="hidden" th:field="*{curso.nombre}" />
 
                             <div class="col-md-6">
                                 <label for="nombre" class="form-label fw-semibold">Nombre</label>
