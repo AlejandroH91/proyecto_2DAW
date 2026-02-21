@@ -23,7 +23,9 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
     }
 
-    // Password encoder para validar hashes BCrypt
+    /*Password encoder para validar hashes BCrypt, lo he desactivado
+     *  porque me daba problemas al recuperar la pass encriptada, lo he dejado en
+     *  texto plano para comprobar el login*/ 
    
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -54,16 +56,25 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authenticationProvider(authenticationProvider()) 
+            /*Permiso para las cabereas según el rol cuando se loguea*/
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login", "/css/**", "/js/**").permitAll()
                 .requestMatchers("/profesores/**").hasAnyRole("PROFESOR", "ADMIN")
                 .anyRequest().authenticated()
             )
+            /*Para evitar que se guarde la sesión en la caché*/
+            .headers(headers -> headers
+            	    .cacheControl(cache -> cache.disable()) 
+            		)
+            	/*Para que coincidan nombre y pass*/
             .formLogin(form -> form
-                .loginPage("/login")
-                .defaultSuccessUrl("/profesores", true)
-                .permitAll()
-            )
+            	    .loginPage("/login")
+            	    .usernameParameter("username") 
+            	    .passwordParameter("password") 
+            	    .defaultSuccessUrl("/profesores", true)
+            	    .permitAll()
+            	)
+            /*Para salir de la aplicación*/
             .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout")

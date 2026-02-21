@@ -8,110 +8,136 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.entidades.Alumno;
 import com.entidades.Curso;
 import com.servicio.alumno.AlumnoServicio;
 import com.servicio.curso.CursoServicio;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
 @Controller
 @RequestMapping("/Clases")
 public class CursoControlador {
 	
 	@Autowired
-	private CursoServicio curso;
-	
-	@Autowired
-	private AlumnoServicio alumno;
-	
-	
-	/*
-	 * Este primer bloque para las acciones de curso
-	 * listar, */
-	@GetMapping
-	public String listarCurso(Model model) {
-		
-		model.addAttribute("listaCurso", curso.mostrarCursos());
-		
-		return "Clases";
-	}
-	
-	@GetMapping("/nuevo")
-	public String mostrarFormularioCurso(Model model) {
-	    model.addAttribute("curso", new Curso());
-	    return "nuevoCurso"; 
-	}
-
-	@GetMapping("/ver")
-	public String verCurso(@RequestParam String nombre, Model model) {
-
-	    model.addAttribute("listaCursos", curso.mostrarCursos());
-
-	    Curso cursoSeleccionado = curso.mostrarCursosPorNombre(nombre);
-	    model.addAttribute("curso", cursoSeleccionado);
-
-	    return "Clases";
-	}
-	
-	@PostMapping("/guardar")
-    public String guardarCurso(@ModelAttribute Curso cursos) {
-		curso.agregarCurso(cursos);
-        return "redirect:/Clases";
-    }
-
-    @PostMapping("/actualizar")
-    public String actualizarCurso(@RequestParam int id, @ModelAttribute Curso cursos) {
-    	curso.editarCurso(id, cursos);
-        return "redirect:/Clases";
-    }
-
+    private CursoServicio cursoServicio;
     
-    @PostMapping("/eliminarCurso")
+    @Autowired
+    private AlumnoServicio alumnoServicio;
+
+    @GetMapping
+    public String listarTodo(@RequestParam(value = "cursoId", required = false) Integer cursoId, Model model) {
+        model.addAttribute("todosLosCursos", cursoServicio.mostrarCursos());
+        
+        if (cursoId != null) {
+            Curso curso = cursoServicio.mostrarCursoPorId(cursoId);
+            if (curso != null) {
+                // Usamos la propia lista que tiene el curso dentro
+                model.addAttribute("todosLosAlumnos", curso.getAlumnos());
+                model.addAttribute("cursoSeleccionado", cursoId);
+            }
+        } else {
+            // Si no hay curso seleccionado, enviamos lista vacía para que no se vea nada
+            model.addAttribute("todosLosAlumnos", new ArrayList<Alumno>());
+        }
+        return "Clases";
+    }
+
+    @PostMapping("/importar")
+    public String importarAlumnos(@RequestParam("archivo") MultipartFile archivo) {
+        if (archivo.isEmpty()) {
+            return "redirect:/Clases?error=archivoVacio";
+        }
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(archivo.getInputStream(), StandardCharsets.UTF_8))) {
+            String linea,fecha_nac,nombreCurso;
+             br.readLine(); 
+            while ((linea = br.readLine()) != null) {
+                if (linea.trim().isEmpty()) continue;
+
+                String[] datos = linea.split(",");
+                
+                // Verificamos que existan las 6 columnas (0 al 5)
+                if (datos.length >= 6) {
+                    try {
+                        Alumno a = new Alumno();
+                        a.setNombre(datos[0].trim());
+                        a.setApellido1(datos[1].trim());
+                        a.setApellido2(datos[2].trim());
+                        a.setEmail(datos[3].trim());
+                        fecha_nac = datos[4].trim();
+                        a.setFecha_nacimiento(LocalDate.parse(fecha_nac));
+                        nombreCurso = datos[5].trim();
+                        Curso cursoExistente = cursoServicio.mostrarCursosPorNombre(nombreCurso);
+                        
+                        if (cursoExistente != null) {
+                            a.setCurso(cursoExistente);
+                        } 
+                        alumnoServicio.agregarAlumno(a);
+                        
+                    } catch (Exception e) {
+                      
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return "redirect:/Clases";
+    }
+   
+    @GetMapping("/eliminarCurso")
     public String eliminarCurso(@RequestParam int id) {
-        Curso eliminarCurso = curso.mostrarCursoPorId(id);
-        if (eliminarCurso.getAlumnos() == null || eliminarCurso.getAlumnos().isEmpty()) {
-            curso.eliminarCurso(id);
-        } 
+        Curso c = cursoServicio.mostrarCursoPorId(id);
+        if (c != null && (c.getAlumnos() == null || c.getAlumnos().isEmpty())) {
+            cursoServicio.eliminarCurso(id);
+        }
         return "redirect:/Clases";
     }
-    
-    /*
-     * Segundo bloque para el CRUD de los alumnos.*/
-    
-    @PostMapping("/alumno/guardar")
-    public String guardarAlumno(@ModelAttribute Alumno alumno1) {
-        alumno.agregarAlumno(alumno1);
-        return "redirect:/Clases" ;
+
+    @GetMapping("/nuevo")
+    public String mostrarFormularioCurso(Model model) {
+        model.addAttribute("curso", new Curso());
+        return "nuevoCurso"; 
     }
 
-    @PostMapping("/alumno/actualizar")
-    public String actualizarAlumno(@RequestParam int id, @ModelAttribute Alumno alumno1) {
-        alumno.editarAlumno(id, alumno1);
-        return "redirect:/Clases/ver?nombre=" + alumno1.getCurso().getNombre();
-    }
-
-    @GetMapping("/alumno/eliminar")
-    public String eliminarAlumno(@RequestParam int id) {
-        Alumno alumno1 = alumno.mostrarAlumnoPorId(id);
-        String cursoNombre = alumno1.getCurso().getNombre();
-        alumno.eliminarAlumno(id);
-        return "redirect:/Clases/ver?nombre=" + cursoNombre;
+    @PostMapping("/guardar")
+    public String guardarCurso(@ModelAttribute Curso curso) {
+        cursoServicio.agregarCurso(curso);
+        return "redirect:/Clases";
     }
 
     @GetMapping("/alumno/nuevo")
     public String nuevoAlumno(@RequestParam int cursoId, Model model) {
-        Curso curso1 = curso.mostrarCursoPorId(cursoId);
-        Alumno alumno1 = new Alumno();
-        alumno1.setCurso(curso1);
-        model.addAttribute("alumno", alumno1);
+        Curso c = cursoServicio.mostrarCursoPorId(cursoId);
+        Alumno a = new Alumno();
+        a.setCurso(c);
+        model.addAttribute("alumno", a);
         return "alumnoForm";
     }
 
     @GetMapping("/alumno/editar")
     public String editarAlumno(@RequestParam int id, Model model) {
-        Alumno alumno1 = alumno.mostrarAlumnoPorId(id);
-        model.addAttribute("alumno", alumno1);
+        model.addAttribute("alumno", alumnoServicio.mostrarAlumnoPorId(id));
         return "alumnoForm";
     }
 
+    @PostMapping("/alumno/actualizar")
+    public String actualizarAlumno(@ModelAttribute Alumno al) {
+        alumnoServicio.editarAlumno(al.getId(), al);
+        return "redirect:/Clases"; 
+    }
+
+    @GetMapping("/alumno/eliminar")
+    public String eliminarAlumno(@RequestParam int id) {
+        alumnoServicio.eliminarAlumno(id);
+        return "redirect:/Clases";
+    }
 }

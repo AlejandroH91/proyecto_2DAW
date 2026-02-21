@@ -1,88 +1,144 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
-	<meta charset="UTF-8">
-	<title>Cursos</title>
-
-	<!-- Bootstrap CSS -->
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Clases</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
-
 <body class="bg-light">
-	<div class="container mt-5">
-		<div class="card shadow-lg p-4">
-			<h1 class="text-center mb-4 text-primary">Listado de Cursos</h1>
 
-			<!-- VER CLASES-->
-			<form th:action="@{/Clases/ver}" method="get" class="row g-3 justify-content-center">
-				<div class="col-md-6">
-					<label class="form-label fw-bold">Seleccione un curso</label>
+    <div class="container mt-5 mb-5">
+        <div class="card shadow-lg p-4">
 
-					<select name="nombre" class="form-select">
-						<option value="">Seleccione un curso</option>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="text-primary">
+					<i class="bi bi-mortarboard-fill"></i> 
+					Ver Clases</h1>
+					
+                <a th:href="@{/Clases/nuevo}" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Nuevo Curso
+                </a>
+				
+            </div>
 
-						<option th:each="c : ${listaCursos}" th:value="${c.nombre}" th:text="${c.nombre}">
-						</option>
-					</select>
-				</div>
+            <div class="card border-primary mb-4">
+                <div class="card-body">
+					
+                    <h5 class="card-title text-primary">
+						<i class="bi bi-file-earmark-arrow-up"></i>
+						 Importar Alumnos</h5>
+                    <form th:action="@{/Clases/importar}" method="post" enctype="multipart/form-data" class="row g-3 mt-1">
+						
+                        <div class="col-auto">
+							
+                            <input type="file" name="archivo" class="form-control" accept=".csv" required>
+							
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-upload"></i> Subir
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
-				<div class="col-md-2 d-grid">
-					<label class="form-label invisible">Botón</label>
-					<button type="submit" class="btn btn-primary">
-						Ver alumnos
-					</button>
-				</div>
-			</form>
-			<div th:if="${curso != null}" class="mt-5">
-				<h2 class="text-success text-center mb-4" th:text="${curso.nombre}">
-				</h2>
-				<div class="table-responsive">
-					<table class="table table-striped table-hover table-bordered">
-						<thead class="table-dark">
-							<tr>
-								<th>Nombre</th>
-								<th>Apellido</th>
-								<th>2º Apellido</th>
-								<th>Email</th>
-								<th>Fecha Nacimiento</th>
-								<th>Acciones</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="alumno : ${curso.alumnos}">
-								<td th:text="${alumno.nombre}"></td>
-								<td th:text="${alumno.apellido1}"></td>
-								<td th:text="${alumno.apellido2}"></td>
-								<td th:text="${alumno.email}"></td>
-								<td th:text="${alumno.fechaNacimientoFormateada}"></td>
-								<td>
-									<a th:href="@{/Clases/alumno/editar(id=${alumno.id})}"
-										class="btn btn-warning btn-sm">
-										Editar
-									</a>
+            <div class="row mb-3 align-items-end">
+				
+                <div class="col-md-4">
+					
+                    <label class="form-label fw-bold"><i class="bi bi-funnel"></i> Seleccionar Curso para ver alumnos:</label>
+					
+                    <select id="filtroCurso" class="form-select border-info" 
+                            onchange="window.location.href='/Clases?cursoId=' + this.value">
+                        <option value="">-- Seleccione un curso --</option>
+                        <option th:each="c : ${todosLosCursos}" 
+                                th:value="${c.id}" 
+                                th:text="${c.nombre}"
+                                th:selected="${c.id == cursoSeleccionado}"></option>
+                    </select>
+                </div>
+            </div>
 
-									<a th:href="@{/Clases/alumno/eliminar(id=${alumno.id})}"
-										class="btn btn-danger btn-sm">
-										Eliminar
-									</a>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="text-center mt-4">
-				<a th:href="@{/profesores}" class="btn btn-outline-secondary btn-lg px-4">
-					Volver a profesores
-				</a>
-			</div>
-		</div>
-	</div>
+            <div class="table-responsive" th:if="${not #lists.isEmpty(todosLosAlumnos)}">
+                <table id="tablaAlumnos" class="table table-hover table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Nombre Completo</th>
+                            <th>Email</th>
+                            <th>Curso</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="al : ${todosLosAlumnos}">
+                            <td th:text="${(al.nombre != null ? al.nombre : '') + ' ' + (al.apellido1 != null ? al.apellido1 : '')}"></td>
+                            <td th:text="${al.email}"></td>
+                            <td>
+                                <span class="badge bg-info text-dark" 
+                                      th:if="${al.curso != null}" 
+                                      th:text="${al.curso.nombre}"></span>
+                            </td>
+                            <td>
+                                <a th:href="@{/Clases/alumno/editar(id=${al.id})}" class="btn btn-warning btn-sm">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a th:href="@{/Clases/alumno/eliminar(id=${al.id})}" class="btn btn-danger btn-sm"
+                                   onclick="return confirm('¿Borrar este alumno?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div th:if="${#lists.isEmpty(todosLosAlumnos)}" class="alert alert-light border text-center py-4">
+                <i class="bi bi-info-circle fs-4 text-info"></i><br>
+                No hay alumnos para mostrar. Seleccione un curso del listado superior.
+            </div>
 
-	<!-- Bootstrap JS -->
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+            <div class="d-flex justify-content-between mt-4">
+                <a th:href="@{/profesores}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Volver
+                </a>
+                <button type="button" id="btnEliminarCurso" class="btn btn-danger">
+                    <i class="bi bi-trash-fill"></i> Eliminar Curso Seleccionado
+                </button>
+            </div>
+        </div>
+    </div>
 
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            if ($('#tablaAlumnos').length) {
+                $('#tablaAlumnos').DataTable({
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json"
+                    },
+                    "dom": 'rtip',
+                    "pageLength": 15
+                });
+            }
+
+            // Lógica para el botón de eliminar curso
+            $('#btnEliminarCurso').on('click', function() {
+                let idCurso = $('#filtroCurso').val();
+                if (!idCurso) {
+                    alert("Por favor, selecciona primero un curso en el desplegable superior.");
+                    return;
+                }
+                if (confirm("¿Estás seguro de que deseas eliminar este curso? (Solo se eliminará si no tiene alumnos)")) {
+                    window.location.href = "/Clases/eliminarCurso?id=" + idCurso;
+                }
+            });
+        });
+    </script>
 </body>
-
 </html>

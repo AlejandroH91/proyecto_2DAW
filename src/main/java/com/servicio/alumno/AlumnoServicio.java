@@ -10,5 +10,6 @@ public interface AlumnoServicio {
 	    void agregarAlumno(Alumno alumno);
 	    void editarAlumno(int id, Alumno alumno);
 	    void eliminarAlumno(int id);
+		
 
 }
