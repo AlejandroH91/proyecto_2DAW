@@ -93,10 +93,10 @@
                                       th:text="${al.curso.nombre}"></span>
                             </td>
                             <td>
-                                <a th:href="@{/Clases/alumno/editar(id=${al.id})}" class="btn btn-warning btn-sm">
+                                <a th:href="@{/Alumnos/editar(id=${al.id})}" class="btn btn-warning btn-sm">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-                                <a th:href="@{/Clases/alumno/eliminar(id=${al.id})}" class="btn btn-danger btn-sm"
+                                <a th:href="@{/Alumnos/eliminar(id=${al.id})}" class="btn btn-danger btn-sm"
                                    onclick="return confirm('¿Borrar este alumno?')">
                                     <i class="bi bi-trash"></i>
                                 </a>
