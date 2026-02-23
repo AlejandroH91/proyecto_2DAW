@@ -31,25 +31,31 @@ public class AlumnoControlador {
         Alumno a = new Alumno();
         a.setCurso(c);
         model.addAttribute("alumno", a);
-        return "alumnoForm";
+        return "alumnos/alumnoForm";
     }
 
     @GetMapping("/editar")
     public String editarAlumno(@RequestParam int id, Model model) {
         model.addAttribute("alumno", alumnoServicio.mostrarAlumnoPorId(id));
-        return "alumnoForm";
+        return "alumnos/alumnoForm";
     }
 
-    /*
-    @PostMapping("/alumno/actualizar")
-    public String actualizarAlumno(@ModelAttribute Alumno al) {
-        alumnoServicio.editarAlumno(al.getId(), al);
-        return "redirect:/Clases"; 
-    } */
-
+  
     @GetMapping("/eliminar")
     public String eliminarAlumno(@RequestParam int id) {
         alumnoServicio.eliminarAlumno(id);
+        return "redirect:/Clases";
+    }
+    
+    @PostMapping("/actualizar") 
+    public String actualizarAlumno(@ModelAttribute Alumno al) {
+        alumnoServicio.editarAlumno(al.getId(), al);
+        return "redirect:/Clases"; 
+    }
+    
+    @PostMapping("/guardar") // Coincide con /Alumnos/guardar
+    public String guardarAlumno(@ModelAttribute Alumno al) {
+        alumnoServicio.agregarAlumno(al);
         return "redirect:/Clases";
     }
 

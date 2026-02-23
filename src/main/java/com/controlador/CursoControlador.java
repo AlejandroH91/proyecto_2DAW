@@ -51,7 +51,7 @@ public class CursoControlador {
             
             model.addAttribute("todosLosAlumnos", new ArrayList<Alumno>());// Si no hay curso seleccionado, enviamos lista vacía para que no se vea nada
         }
-        return "Clases";
+        return "clases/Clases";
     }
 
     @GetMapping("/eliminarCurso")
@@ -67,7 +67,7 @@ public class CursoControlador {
     public String formularioNuevoCurso(Model model) {
         model.addAttribute("objCurso", new Curso()); 
         model.addAttribute("listaProfesores", profesorServicio.mostrarProfesores()); 
-        return "nuevoCurso"; 
+        return "clases/nuevoCurso"; 
     }
 
     @PostMapping("/guardar")
@@ -79,7 +79,7 @@ public class CursoControlador {
     
     
     /*BLOQUE DE ALUMNOS*/
-    @GetMapping("/alumno/nuevo")
+   /* @GetMapping("/alumno/nuevo")
     public String nuevoAlumno(@RequestParam int cursoId, Model model) {
         Curso c = cursoServicio.mostrarCursoPorId(cursoId);
         Alumno a = new Alumno();
@@ -104,7 +104,7 @@ public class CursoControlador {
     public String eliminarAlumno(@RequestParam int id) {
         alumnoServicio.eliminarAlumno(id);
         return "redirect:/Clases";
-    }
+    } */
     
     
     /*CARGA ARCHIVO CSV*/

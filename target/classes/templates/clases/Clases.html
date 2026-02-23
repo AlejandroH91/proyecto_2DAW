@@ -85,7 +85,8 @@
                     </thead>
                     <tbody>
                         <tr th:each="al : ${todosLosAlumnos}">
-                            <td th:text="${(al.nombre != null ? al.nombre : '') + ' ' + (al.apellido1 != null ? al.apellido1 : '')}"></td>
+                            <td th:text="${(al.nombre != null ? al.nombre : '') + ' ' + (al.apellido1 != null ? al.apellido1 : '')
+							+ ' ' + (al.apellido2 != null ? al.apellido2 : '')}"></td>
                             <td th:text="${al.email}"></td>
                             <td>
                                 <span class="badge bg-info text-dark" 

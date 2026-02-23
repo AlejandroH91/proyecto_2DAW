@@ -19,15 +19,13 @@
                         <p class="mb-0 mt-1 opacity-75" th:text="${alumno.id != null} ? 'Modificar datos del alumno' : 'Crear nuevo alumno'"></p>
                     </div>
                     <div class="card-body p-4 p-md-5">
-                        <form th:action="@{${alumno.id != null} ? '/Clases/alumno/actualizar?id=' + ${alumno.id} : '/Clases/alumno/guardar'}"
-                              th:object="${alumno}"
-                              method="post"
-                              class="row g-4 needs-validation" novalidate>
+						<form th:action="@{${alumno.id != null} ? '/Alumnos/actualizar' : '/Alumnos/guardar'}"
+						      th:object="${alumno}" method="post" class="row g-4 needs-validation" novalidate>
 								
 							  <!--Uso el hidden para no mostrarlos pero son necesarios para que spring 
 								reconozca el curso sin duplicados y me borre alumnos-->
-							  <input type="hidden" th:field="*{curso.id}" />
-							  <input type="hidden" th:field="*{curso.nombre}" />
+								<input type="hidden" th:field="*{id}" />
+								<input type="hidden" th:field="*{curso.id}" />
 
                             <div class="col-md-6">
                                 <label for="nombre" class="form-label fw-semibold">Nombre</label>
@@ -60,9 +58,9 @@
                             </div>
 
                             <div class="col-12 text-center mt-4 d-flex justify-content-between">
-                                <a th:href="@{/Clases/ver(nombre=${alumno.curso.nombre})}" class="btn btn-outline-secondary btn-lg px-4">
-                                    <i class="bi bi-arrow-left me-2"></i> Volver
-                                </a>
+								<a th:href="@{/Clases}" class="btn btn-outline-secondary btn-lg px-4">
+								    <i class="bi bi-arrow-left me-2"></i> Volver
+								</a>
 
                                 <button type="submit" class="btn btn-primary btn-lg px-5">
                                     <i class="bi bi-save me-2"></i> Guardar

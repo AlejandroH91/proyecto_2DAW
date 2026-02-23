@@ -21,19 +21,19 @@ public class LoginControlador {
 		return "login";
 	}
 	
+	
 	@PostMapping("/login")
-	public String validarLogin(@RequestParam String email,@RequestParam String pass, Model model ) {
-		
-		Profesores profesor = profesorServicio.findByEmail(email);
-		
-		if (profesor.getEmail() != email && (pass != profesor.getPass() || pass == null)){
-			model.addAttribute("Error", "Correo o pass incorrecto");
-			return "login";
-		}else {
-			model.addAttribute("usuario", profesor);
-			return "redirect: profesores";
-		}
-		
+	public String validarLogin(@RequestParam String email, @RequestParam String pass, Model model) {
+	    
+	    Profesores profesor = profesorServicio.findByEmail(email);
+	    
+	    if (profesor == null || !profesor.getEmail().equals(email) || !profesor.getPass().equals(pass)) {
+	        model.addAttribute("Error", "Correo o pass incorrecto");
+	        return "login";
+	    } else {
+	        model.addAttribute("usuario", profesor);
+	        return "redirect:/profesores"; 
+	    }
 	}
 	
 }

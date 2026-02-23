@@ -26,7 +26,7 @@ public class ProfesorControlador {
         model.addAttribute("listarProfesores", profesoresServicio.mostrarProfesores());
         boolean esAdmin = true; // ajustar según usuario logueado
         model.addAttribute("esAdmin", esAdmin);
-        return "profesores";
+        return "profesores/profesores";
     }
 
    
@@ -40,7 +40,7 @@ public class ProfesorControlador {
     public String mostrarFormularioEditar(@PathVariable("id") int id, Model model) {
         Profesores profesor = profesoresServicio.mostrarProfesorPorId(id);
         model.addAttribute("profesor", profesor);
-        return "editarProfesores";
+        return "profesores/editarProfesores";
     }
 
     @PostMapping("/actualizar/{id}")
