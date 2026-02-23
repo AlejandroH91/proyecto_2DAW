@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Empresas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body class="bg-light">
+
+    <div class="container mt-5 mb-5">
+        <div class="card shadow-lg p-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="text-primary"> Gestión de Empresas</h1>
+                <a th:href="@{/empresas/nueva}" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Nueva Empresa
+                </a>
+            </div>
+
+            <div class="table-responsive">
+                <table id="tablaEmpresas" class="table table-hover table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Nombre Empresa</th>
+                            <th>Tutor Laboral</th>
+                            <th>Email Tutor</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="emp : ${listaEmpresas}">
+                            <td class="fw-bold" th:text="${emp.nombre}"></td>
+                            <td th:text="${emp.nombre_tutor}"></td>
+                            <td>
+                                <a th:href="'mailto:' + ${emp.email_tutor}" class="text-decoration-none">
+                                    <i class="bi bi-envelope"></i> <span th:text="${emp.email_tutor}"></span>
+                                </a>
+                            </td>
+                            <td th:text="${emp.descripcion}"></td>
+                            <td>
+                                <a th:href="@{/empresas/editar/{id}(id=${emp.id})}" class="btn btn-warning btn-sm">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a th:href="@{/empresas/eliminar(id=${emp.id})}" class="btn btn-danger btn-sm"
+                                   onclick="return confirm('¿Seguro que desea eliminar esta empresa?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4">
+                <a th:href="@{/profesores}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Volver
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+
+	<script>
+	    $(document).ready(function() {
+	        $('#tablaEmpresas').DataTable({
+	            "language": {
+	                "sProcessing":     "Procesando...",
+	                "sLengthMenu":     "Mostrar _MENU_ registros",
+	                "sZeroRecords":    "No se encontraron resultados",
+	                "sEmptyTable":     "Ningún dato disponible en esta tabla",
+	                "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+	                "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+	                "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+	                "sSearch":         "Buscar:",
+	                "sInfoThousands":  ",",
+	                "sLoadingRecords": "Cargando...",
+	                "oPaginate": {
+	                    "sFirst":    "Primero",
+	                    "sLast":     "Último",
+	                    "sNext":     "Siguiente",
+	                    "sPrevious": "Anterior"
+	                },
+	                "oAria": {
+	                    "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+	                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+	                }
+	            },
+	            "pageLength": 5
+	        });
+	    });
+	</script>
+</body>
+</html>

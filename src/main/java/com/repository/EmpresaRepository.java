@@ -6,5 +6,6 @@ import com.entidades.Empresa;
 
 @Repository
 public interface EmpresaRepository extends JpaRepository <Empresa, Integer> {
+	Empresa findByNombre(String nombre);
 
 }
