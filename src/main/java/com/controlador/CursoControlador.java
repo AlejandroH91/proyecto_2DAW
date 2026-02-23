@@ -14,6 +14,7 @@ import com.entidades.Alumno;
 import com.entidades.Curso;
 import com.servicio.alumno.AlumnoServicio;
 import com.servicio.curso.CursoServicio;
+import com.servicio.profesores.ProfesoresServicio;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -31,6 +32,10 @@ public class CursoControlador {
     @Autowired
     private AlumnoServicio alumnoServicio;
 
+    @Autowired
+    private ProfesoresServicio profesorServicio;
+    
+    /*BLOQUE CURSO*/
     @GetMapping
     public String listarTodo(@RequestParam(value = "cursoId", required = false) Integer cursoId, Model model) {
         model.addAttribute("todosLosCursos", cursoServicio.mostrarCursos());
@@ -38,17 +43,71 @@ public class CursoControlador {
         if (cursoId != null) {
             Curso curso = cursoServicio.mostrarCursoPorId(cursoId);
             if (curso != null) {
-                // Usamos la propia lista que tiene el curso dentro
-                model.addAttribute("todosLosAlumnos", curso.getAlumnos());
+                
+                model.addAttribute("todosLosAlumnos", curso.getAlumnos());// Lista que tiene el curso dentro con los alumnos
                 model.addAttribute("cursoSeleccionado", cursoId);
             }
         } else {
-            // Si no hay curso seleccionado, enviamos lista vacía para que no se vea nada
-            model.addAttribute("todosLosAlumnos", new ArrayList<Alumno>());
+            
+            model.addAttribute("todosLosAlumnos", new ArrayList<Alumno>());// Si no hay curso seleccionado, enviamos lista vacía para que no se vea nada
         }
         return "Clases";
     }
 
+    @GetMapping("/eliminarCurso")
+    public String eliminarCurso(@RequestParam int id) {
+        Curso c = cursoServicio.mostrarCursoPorId(id);
+        if (c != null && (c.getAlumnos() == null || c.getAlumnos().isEmpty())) {
+            cursoServicio.eliminarCurso(id);
+        }
+        return "redirect:/Clases";
+    }
+
+    @GetMapping("/nuevo")
+    public String formularioNuevoCurso(Model model) {
+        model.addAttribute("objCurso", new Curso()); 
+        model.addAttribute("listaProfesores", profesorServicio.mostrarProfesores()); 
+        return "nuevoCurso"; 
+    }
+
+    @PostMapping("/guardar")
+    public String guardarCurso(@ModelAttribute Curso curso) {
+        cursoServicio.agregarCurso(curso);
+        return "redirect:/Clases";
+    }
+
+    
+    
+    /*BLOQUE DE ALUMNOS*/
+    @GetMapping("/alumno/nuevo")
+    public String nuevoAlumno(@RequestParam int cursoId, Model model) {
+        Curso c = cursoServicio.mostrarCursoPorId(cursoId);
+        Alumno a = new Alumno();
+        a.setCurso(c);
+        model.addAttribute("alumno", a);
+        return "alumnoForm";
+    }
+
+    @GetMapping("/alumno/editar")
+    public String editarAlumno(@RequestParam int id, Model model) {
+        model.addAttribute("alumno", alumnoServicio.mostrarAlumnoPorId(id));
+        return "alumnoForm";
+    }
+
+    @PostMapping("/alumno/actualizar")
+    public String actualizarAlumno(@ModelAttribute Alumno al) {
+        alumnoServicio.editarAlumno(al.getId(), al);
+        return "redirect:/Clases"; 
+    }
+
+    @GetMapping("/alumno/eliminar")
+    public String eliminarAlumno(@RequestParam int id) {
+        alumnoServicio.eliminarAlumno(id);
+        return "redirect:/Clases";
+    }
+    
+    
+    /*CARGA ARCHIVO CSV*/
     @PostMapping("/importar")
     public String importarAlumnos(@RequestParam("archivo") MultipartFile archivo) {
         if (archivo.isEmpty()) {
@@ -90,54 +149,6 @@ public class CursoControlador {
             e.printStackTrace();
         }
         
-        return "redirect:/Clases";
-    }
-   
-    @GetMapping("/eliminarCurso")
-    public String eliminarCurso(@RequestParam int id) {
-        Curso c = cursoServicio.mostrarCursoPorId(id);
-        if (c != null && (c.getAlumnos() == null || c.getAlumnos().isEmpty())) {
-            cursoServicio.eliminarCurso(id);
-        }
-        return "redirect:/Clases";
-    }
-
-    @GetMapping("/nuevo")
-    public String mostrarFormularioCurso(Model model) {
-        model.addAttribute("curso", new Curso());
-        return "nuevoCurso"; 
-    }
-
-    @PostMapping("/guardar")
-    public String guardarCurso(@ModelAttribute Curso curso) {
-        cursoServicio.agregarCurso(curso);
-        return "redirect:/Clases";
-    }
-
-    @GetMapping("/alumno/nuevo")
-    public String nuevoAlumno(@RequestParam int cursoId, Model model) {
-        Curso c = cursoServicio.mostrarCursoPorId(cursoId);
-        Alumno a = new Alumno();
-        a.setCurso(c);
-        model.addAttribute("alumno", a);
-        return "alumnoForm";
-    }
-
-    @GetMapping("/alumno/editar")
-    public String editarAlumno(@RequestParam int id, Model model) {
-        model.addAttribute("alumno", alumnoServicio.mostrarAlumnoPorId(id));
-        return "alumnoForm";
-    }
-
-    @PostMapping("/alumno/actualizar")
-    public String actualizarAlumno(@ModelAttribute Alumno al) {
-        alumnoServicio.editarAlumno(al.getId(), al);
-        return "redirect:/Clases"; 
-    }
-
-    @GetMapping("/alumno/eliminar")
-    public String eliminarAlumno(@RequestParam int id) {
-        alumnoServicio.eliminarAlumno(id);
         return "redirect:/Clases";
     }
 }

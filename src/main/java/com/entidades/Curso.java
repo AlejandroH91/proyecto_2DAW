@@ -26,7 +26,7 @@ public class Curso{
 	
 	@NotBlank(message="No puedes dejar en blanco los campos")
 	@Size(min = 5 , max = 20)
-	@Pattern(regexp = "^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$", message = "El nombre solo puede contener letras")
+	@Pattern(regexp = "^[A-Za-zÁÉÍÓÚáéíóúÑñ _-]+$", message = "El nombre solo puede contener letras")
 	@Column(unique= true, nullable = false)
 	private String nombre;
 	

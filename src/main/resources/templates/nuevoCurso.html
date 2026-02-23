@@ -16,43 +16,29 @@
                         <h3 class="mb-0"><i class="bi bi-journal-plus"></i> Crear Nuevo Curso</h3>
                     </div>
                     <div class="card-body">
-                        <form th:action="@{/Clases/guardar}" th:object="${curso}" method="post">
-                            
-                            <div class="mb-3">
-                                <label for="nombre" class="form-label">Nombre del Curso (Identificador):</label>
-                                <input type="text" th:field="*{nombre}" class="form-control" 
-                                       placeholder="Ej: PRIMERO_DAW" required>
-                                <div class="text-danger" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
-                                <small class="text-muted">Debe ser único y tener entre 5 y 20 caracteres.</small>
-                            </div>
+						<form th:action="@{/Clases/guardar}" th:object="${objCurso}" method="post">
+						    
+						    <div class="mb-3">
+						        <label for="nombre" class="form-label">Nombre del Curso</label>
+						        <input type="text" th:field="*{nombre}" class="form-control" id="nombre" required>
+						    </div>
 
-                            <div class="mb-3">
-                                <label for="nombreCurso" class="form-label">Tipo de Curso (Categoría):</label>
-                                <select th:field="*{nombreCurso}" class="form-select" required>
-                                    <option value="">-- Seleccione una categoría --</option>
-                                    <option th:each="tipo : ${T(com.entidades.NombreCurso).values()}" 
-                                            th:value="${tipo}" 
-                                            th:text="${tipo}"></option>
-                                </select>
-                            </div>
+						    <div class="mb-3">
+						        <label for="profesor" class="form-label">Profesor Asignado</label>
+						        <select th:field="*{profesor}" class="form-select" id="profesor">
+						            <option value="">-- Seleccione un profesor --</option>
+						            <option th:each="p : ${listaProfesores}" 
+						                    th:value="${p.id}" 
+						                    th:text="${p.nombre + ' ' + p.apellido1}">
+						            </option>
+						        </select>
+						    </div>
 
-                            <div class="mb-3">
-                                <label for="profesor" class="form-label">Profesor Asignado:</label>
-                                <select th:field="*{profesor}" class="form-select">
-                                    <option value="">-- Sin profesor asignado --</option>
-                                    <option th:each="p : ${todosLosProfesores}" 
-                                            th:value="${p.id}" 
-                                            th:text="${p.nombre + ' ' + p.apellido}"></option>
-                                </select>
-                            </div>
-
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <a th:href="@{/Clases}" class="btn btn-secondary me-md-2">Cancelar</a>
-                                <button type="submit" class="btn btn-success">
-                                    <i class="bi bi-save"></i> Guardar Curso
-                                </button>
-                            </div>
-                        </form>
+						    <div class="mt-4">
+						        <button type="submit" class="btn btn-primary">Guardar Curso</button>
+						        <a th:href="@{/Clases}" class="btn btn-secondary">Cancelar</a>
+						    </div>
+						</form>
                     </div>
                 </div>
             </div>
