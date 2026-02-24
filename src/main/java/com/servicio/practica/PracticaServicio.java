@@ -8,12 +8,13 @@ import com.entidades.Practica;
 import com.entidades.Profesores;
 
 public interface PracticaServicio {
-	/*métodos abstractos implementados en Practica servicio impl*/
+	
     List<Practica> mostrarPracticas();
 
-    Practica buscarPorNombreAlumno(String nombre);
-
-    Practica buscarPorNombreProfesor(String nombre);
-
-    Practica buscarPorEmailProfesor(String email);
-}
+    void guardarPractica(Practica practica);
+    
+    Practica buscarPracticaPorId(int id);
+    
+    void eliminarPracticaPorId(int id);
+    
+    }

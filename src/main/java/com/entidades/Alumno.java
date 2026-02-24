@@ -99,8 +99,8 @@ public class Alumno {
 	}
 
 	public String getFechaNacimientoFormateada() {
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-	    return fecha_nacimiento.format(formatter);
+	    DateTimeFormatter formateada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+	    return fecha_nacimiento.format(formateada);
 	} 
 	public void setFecha_nacimiento(LocalDate fecha_nacimiento) {
 		this.fecha_nacimiento = fecha_nacimiento;

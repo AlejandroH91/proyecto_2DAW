@@ -1,6 +1,7 @@
 package com.entidades;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -74,6 +75,16 @@ public class Practica {
 	public LocalDate getFechaFin() {
 		return fechaFin;
 	}
+	
+	public String getFechaInicioFormateada() {
+	    DateTimeFormatter formateada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+	    return fechaInicio.format(formateada);
+	} 
+	
+	public String getFechaFinFormateada() {
+	    DateTimeFormatter formateada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+	    return fechaFin.format(formateada);
+	} 
 
 	public void setFechaFin(LocalDate fechaFin) {
 		this.fechaFin = fechaFin;

@@ -13,26 +13,23 @@ public class PracticaServicioImpl implements PracticaServicio {
 	
 	@Autowired
 	private PracticaRepository repository;
-	
-	public Practica buscarPorNombreAlumno(String nombre) {
-		return repository.findByAlumnoNombre(nombre);
-	}
-	
+		
 	public List <Practica> mostrarPracticas(){
 		return repository.findAll();
 	}
 	
-	public Practica buscarAlumnoPorNombre(String nombre) {
-	    return repository.findByAlumnoNombre(nombre);
-	}
 	
-	public Practica buscarPorNombreProfesor(String nombre) {
-		return repository.findByProfesorNombre(nombre);
-		
-	}
-	
+	 public void guardarPractica(Practica practica) {
+		 repository.save(practica);
+	 }
+	    
+	  public  Practica buscarPracticaPorId(int id) {
+		   
+		   return repository.findById(id).orElse(null);
+	 }
 	  @Override
-	    public Practica buscarPorEmailProfesor(String email) {
-	        return repository.findByProfesorEmail(email);
-	    }
+	  public void eliminarPracticaPorId(int id) {
+	    	repository.deleteById(id);
+	 }
+	 
 }
