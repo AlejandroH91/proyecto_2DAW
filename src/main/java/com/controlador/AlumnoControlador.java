@@ -52,7 +52,7 @@ public class AlumnoControlador {
         return "redirect:/Clases"; 
     }
     
-    @PostMapping("/guardar") // Coincide con /Alumnos/guardar
+    @PostMapping("/guardar") 
     public String guardarAlumno(@ModelAttribute Alumno al) {
         alumnoServicio.agregarAlumno(al);
         return "redirect:/Clases";

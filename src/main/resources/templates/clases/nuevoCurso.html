@@ -13,18 +13,18 @@
             <div class="col-md-6">
                 <div class="card shadow">
                     <div class="card-header bg-primary text-white">
-                        <h3 class="mb-0"><i class="bi bi-journal-plus"></i> Crear Nuevo Curso</h3>
+                        <h3 class="mb-0"><i class="bi bi-journal-plus" th:text="#{titulo.NuevoCurso}"></i> </h3>
                     </div>
                     <div class="card-body">
 						<form th:action="@{/Clases/guardar}" th:object="${objCurso}" method="post">
 						    
 						    <div class="mb-3">
-						        <label for="nombre" class="form-label">Nombre del Curso</label>
+						        <label for="nombre" class="form-label" th:text="#{nombre.NuevoCurso}"></label>
 						        <input type="text" th:field="*{nombre}" class="form-control" id="nombre" required>
 						    </div>
 
 						    <div class="mb-3">
-						        <label for="profesor" class="form-label">Profesor Asignado</label>
+						        <label for="profesor" class="form-label" th:text="#{profesor.Curso}"></label>
 						        <select th:field="*{profesor}" class="form-select" id="profesor">
 						            <option value="">-- Seleccione un profesor --</option>
 						            <option th:each="p : ${listaProfesores}" 
@@ -35,8 +35,8 @@
 						    </div>
 
 						    <div class="mt-4">
-						        <button type="submit" class="btn btn-primary">Guardar Curso</button>
-						        <a th:href="@{/Clases}" class="btn btn-secondary">Cancelar</a>
+						        <button type="submit" class="btn btn-primary" th:text="#{guardarCurso}"></button>
+						        <a th:href="@{/Clases}" class="btn btn-secondary" th:text="#{cancelar}"></a>
 						    </div>
 						</form>
                     </div>
