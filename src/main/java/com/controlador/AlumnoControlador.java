@@ -24,14 +24,13 @@ public class AlumnoControlador {
     @Autowired
     private CursoServicio cursoServicio;
 	
-	   /*BLOQUE DE ALUMNOS*/
     @GetMapping("/alumno/nuevo")
     public String nuevoAlumno(@RequestParam int cursoId, Model model) {
         Curso c = cursoServicio.mostrarCursoPorId(cursoId);
         Alumno a = new Alumno();
         a.setCurso(c);
         model.addAttribute("alumno", a);
-        return "alumnos/alumnoForm";
+        return "/alumnos/nuevoAlumno";
     }
 
     @GetMapping("/editar")
@@ -57,6 +56,13 @@ public class AlumnoControlador {
     public String guardarAlumno(@ModelAttribute Alumno al) {
         alumnoServicio.agregarAlumno(al);
         return "redirect:/Clases";
+    }
+    
+    @GetMapping("/nuevo")
+    public String mostrarFormularioNuevoAlumno(Model model) {
+        model.addAttribute("alumno", new Alumno());
+        model.addAttribute("listaCursos", cursoServicio.mostrarCursos()); 
+        return "/alumnos/nuevoAlumno";
     }
 
 }
